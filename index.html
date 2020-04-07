@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    		<title>Микроблог</title>	
+	<script type="text/javascript">
+	var date= new Date();
+	
+	function Record(text,date) {
+	this.text=text;
+	this.date=date;
+}
+
+function time(date){
+	return ""+date.toLocaleTimeString();
+}
+
+function day(date){
+	return ""+date.toLocaleDateString();
+}
+	 
+	function send(){
+	var r = new Record(
+		document.getElementById("newtext").value,
+			new Date());
+	records.push(r);
+	displayRecords();
+	}
+	
+	
+	
+	function displayRecords(){
+		var text = ""
+		var odd = true;
+		for (var i in records){
+			if (odd) {
+				text += "<p style='background-color:#CD853F'>";
+				}else{
+				text += "<p style='background-color:#FF1493'>";
+				}
+				odd = !odd;
+				text += time(records[i].date) + " ";
+				text += "<strong>" + day(records[i].date) + "</strong><br>";
+				text += records[i].text + "</p>";
+		}
+		document.getElementById("records_place").innerHTML = text;
+	}
+	
+	
+	 function sort(compare){
+	 var l=records.length;
+		
+		for (var i=0;i<l-1; i++) {
+			var j_min = i;
+			for (var j=i+1;j<l; j++){
+				if (compare(records[j],records[j_min])){
+					j_min=j;
+				}
+			}
+			var r=records[j_min];
+			records[j_min] = records[i];
+			records[i] = r;
+		}
+		displayRecords();
+	 }
+	 
+	 
+	 function morning(){
+		var text = ""
+		var odd = true;
+		for (var i in records){
+		if(time(records[i].date)>=time(new Date(2019,10,21,06,00,0,0)) && time(records[i].date)
+								<=time(new Date(2019,10,21,10,00,0,0)))
+						{
+			if (odd) {
+				text += "<p style='background-color:#CD853F'>";
+				}else{
+				text += "<p style='background-color:#FF7F50'>";
+				}
+				odd = !odd;
+				text += time(records[i].date) + " ";
+				text += "<strong>" + day(records[i].date) + "</strong><br>";
+				text += records[i].text + "</p>";
+					}
+		document.getElementById("records_place").innerHTML = text;
+			}
+	}
+	
+	function search() {
+		let y=prompt("Поиск:");
+		var text = ""
+		var odd = true;
+		for (var i in records){
+	 if(records[i].text.indexOf(y)>=0){
+		if (odd) {
+				text += "<p style='background-color:#FFDAB9'>";
+				}else{
+				text += "<p style='background-color:#FF7F50'>";
+				}
+				odd = !odd;
+				text += time(records[i].date) + " ";
+				text += "<strong>" + day(records[i].date) + "</strong><br>";
+				text += records[i].text + "</p>";
+					}
+		document.getElementById("records_place").innerHTML = text;
+			}
+	}
+	
+	
+	  var comparers = [
+		function comp1(r1,r2){
+			return r1.date < r2.date;
+		},
+		
+		function comp2(r1,r2){
+			return r1.date > r2.date;
+		},
+			
+		function comp3(r1,r2){
+			return r1.text < r2.text;
+		},
+		
+		function comp4(r1,r2){
+			return r1.text > r2.text;
+			
+		},
+			
+		function comp5(r1,r2){
+			return r1.text.length > r2.text.length;
+			
+		},
+		
+		function comp6(r1,r2){
+			return r1.text.length < r2.text.length;
+			
+		}
+		];
+	
+	 var records=[
+	 new Record("Проснулись, потянулись!",
+			new Date(2019,11,11,08,00,0,0)),
+	 new Record("Всех люблю и обнимаю!!!!!",
+			new Date(2019,11,12,10,00,0,0)),
+	 new Record("Отправляюсь на учёбу",
+			new Date(2019,11,10,12,00,0,0)),
+	 new Record("Прекрасная погода)))Не так ли?",
+			new Date(2019,11,10,19,00,0,0)),		
+	 ];
+	
+		</script>
+	</head>
+	<body onload="displayRecords()">
+
+	<div id="toolbar">
+		<input type="text" id="newtext"/>
+		<input type="button" value="Добавить запись" onclick="send()"/>
+		<input type="button" value="Найти" onclick="search()"/><br>
+		<input type="button" value="По дате (увелич.)" onclick="sort(comparers[0])"/>
+		<input type="button" value="По дате (уменьш)" onclick="sort(comparers[1])"/>
+		<input type="button" value="По алфавиту от А-Я" onclick="sort(comparers[2])"/>
+		<input type="button" value="По алфавиту от Я-А" onclick="sort(comparers[3])"/>
+		<input type="button" value="По длинне (увелич)" onclick="sort(comparers[4])"/>
+		<input type="button" value="По длинне (уменьш)" onclick="sort(comparers[5])"/>
+		<input type="button" value="Утренние" onclick="morning()"/>
+		
+	</div>
+	<div id="records_place">
+	</div>
+	</body>
+</html>
